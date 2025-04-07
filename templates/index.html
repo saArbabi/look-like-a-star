@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <title>Upload and Resize Image</title>
+  <style>
+    img {
+      max-width: 300px;
+      margin: 10px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .images {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload an Image</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="image" required>
+      <input type="submit" value="Upload">
+    </form>
+
+    {% if original and resized %}
+    <h2>Original and Resized Images:</h2>
+    <div class="images">
+      <div>
+        <p>Original</p>
+        <img src="data:image/jpeg;base64,{{ original }}" alt="Original Image">
+      </div>
+      <div>
+        <p>Resized</p>
+        <img src="data:image/jpeg;base64,{{ resized }}" alt="Resized Image">
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
