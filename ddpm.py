@@ -57,20 +57,6 @@ def generate(image_pipe, scheduler, device):
         # Update x
         x = scheduler_output.prev_sample
 
-        # Occasionally display both x and the predicted denoised images
-        # if i % 10 == 0 or i == len(scheduler.timesteps) - 1:
-        #     fig, axs = plt.subplots(1, 2, figsize=(12, 5))
-
-        #     grid = torchvision.utils.make_grid(x, nrow=4).permute(1, 2, 0)
-        #     axs[0].imshow(grid.cpu().clip(-1, 1) * 0.5 + 0.5)
-        #     axs[0].set_title(f"Current x (step {i})")
-
-        #     pred_x0 = scheduler_output.pred_original_sample  # Not available for all schedulers
-        #     grid = torchvision.utils.make_grid(pred_x0, nrow=4).permute(1, 2, 0)
-        #     axs[1].imshow(grid.cpu().clip(-1, 1) * 0.5 + 0.5)
-        #     axs[1].set_title(f"Predicted denoised images (step {i})")
-        #     plt.show()
-    
     images = []
     # save the generated image
     for i in range(x.shape[0]):
@@ -83,6 +69,73 @@ def generate(image_pipe, scheduler, device):
     return images
 
 
+def color_loss(images, target_image):
+    """Given a target color (R, G, B) return a loss for how far away on average
+    the images' pixels are from that color. Defaults to a light teal: (0.1, 0.9, 0.5)"""
+    target = torch.tensor(target_image).to(images.device)  # Map target color to (-1, 1)
+    target = target[None, :, :, :]  # Get shape right to work with the images (b, c, h, w)
+    error = torch.abs(
+        images - target
+    ).mean()  # Mean absolute difference between the image pixels and the target color
+    return error
+
+
+def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0):
+    # The guidance scale determines the strength of the effect
+    x = torch.randn(4, 3, 256, 256).to(device)
+
+    for i, t in tqdm(enumerate(scheduler.timesteps)):
+
+        # Prepare the model input
+        model_input = scheduler.scale_model_input(x, t)
+
+        # predict the noise residual
+        with torch.no_grad():
+            noise_pred = image_pipe.unet(model_input, t)["sample"]
+
+        # Set x.requires_grad to True
+        x = x.detach().requires_grad_()
+
+        # Get the predicted x0
+        x0 = scheduler.step(noise_pred, t, x).pred_original_sample
+
+        # Calculate loss
+        loss = color_loss(x0, target_image) * guidance_loss_scale
+        if i % 10 == 0:
+            print(i, "loss:", loss.item())
+
+        # Get gradient
+        cond_grad = -torch.autograd.grad(loss, x)[0]
+
+        # Modify x based on this gradient
+        x = x.detach() + cond_grad
+
+        # Now step with scheduler
+        x = scheduler.step(noise_pred, t, x).prev_sample
+
+    images = []
+    # save the generated image
+    for i in range(x.shape[0]):
+        img = x[i].cpu().permute(1, 2, 0).numpy()
+        img = (img * 0.5 + 0.5) * 255
+        img = Image.fromarray(img.astype(np.uint8))
+        img.save(f"generated_image_{i}.png")
+        print(f"Image {i} saved as generated_image_{i}.png")
+        images.append(img)
+    return images
+
+
+def image_load(file):
+    img = Image.open(file)
+    img = img.resize((256, 256))
+    img = np.array(img) / 255.0
+    img = torch.tensor(img).permute(2, 0, 1).unsqueeze(0)
+    return img
+
+
 if __name__ == "__main__":
     image_pipe, scheduler, device = load_ddpm_pipeline()
     images = generate(image_pipe, scheduler, device)
+    target_image = image_load("pretty_woman.png")
+    images = guide(image_pipe, scheduler, device, target_image)
+    # images = generate(image_pipe, scheduler, device)
