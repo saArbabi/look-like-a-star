@@ -9,10 +9,13 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 
 # Copy only requirements first to leverage Docker's caching
-COPY requirements.txt ./
+# COPY requirements.txt ./
 
-# Install dependencies
-RUN pip install -r requirements.txt
+# Install larger dependencies first to optimize caching
+RUN pip install torch==2.6.0 torchvision==0.21.0 diffusers==0.32.2 accelerate==1.6.0
+
+# Install the remaining dependencies
+RUN pip install matplotlib==3.9.4 numpy==2.0.2 Flask==3.1.0 pillow==11.1.0 gunicorn
 
 # Copy the rest of the application code
 COPY . ./
