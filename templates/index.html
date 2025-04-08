@@ -14,15 +14,22 @@
       flex-direction: column;
       align-items: center;
     }
-    .images {
+    .row {
       display: flex;
       justify-content: center;
       gap: 20px;
+      margin-bottom: 20px;
     }
     .column {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 10px;
+    }
+    .generated-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 20px;
     }
   </style>
@@ -36,16 +43,20 @@
     </form>
 
     {% if target and generated %}
-    <div class="images">
+    <div class="row">
       <div class="column">
-        <p>Target Image</p>
+        <h2>Target Image</h2>
         <img src="data:image/jpeg;base64,{{ target }}" alt="Target Image">
       </div>
+    </div>
+    <div class="row">
       <div class="column">
-        <p>Generated Images</p>
-        {% for image in generated %}
-        <img src="data:image/jpeg;base64,{{ image }}" alt="Generated Image">
-        {% endfor %}
+        <h2>Generated Images</h2>
+        <div class="generated-row">
+          {% for image in generated %}
+          <img src="data:image/jpeg;base64,{{ image }}" alt="Generated Image">
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% endif %}
