@@ -12,11 +12,16 @@ from ddpm import generate, load_ddpm_pipeline
 app = Flask(__name__)
 
 
-def image_to_base64(img, format="JPEG"):
-    img_io = BytesIO()
-    img.save(img_io, format)
-    img_io.seek(0)
-    return base64.b64encode(img_io.read()).decode("utf-8")
+def images_to_base64(images, format="JPEG"):
+    if not isinstance(images, list):
+        images = [images]
+    b64_images = []
+    for img in images:
+        img_io = BytesIO()
+        img.save(img_io, format)
+        img_io.seek(0)
+        b64_images.append(base64.b64encode(img_io.read()).decode("utf-8"))
+    return b64_images
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -32,14 +37,14 @@ def upload_image():
             return "No selected file"
 
         img = Image.open(file)
+        images = [img] * 5
 
         # Convert original image to base64
-        original_b64 = image_to_base64(img)
+        original_b64 = images_to_base64(img)[0]
 
         # Resize the image (e.g., max 300x300)
         img.thumbnail((300, 300))
-        resized_b64 = image_to_base64(img)
-
+        resized_b64 = images_to_base64(images)
     return render_template("index.html", original=original_b64, resized=resized_b64)
 
 

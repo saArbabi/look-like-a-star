@@ -19,6 +19,12 @@
       justify-content: center;
       gap: 20px;
     }
+    .resized-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -38,7 +44,11 @@
       </div>
       <div>
         <p>Resized</p>
-        <img src="data:image/jpeg;base64,{{ resized }}" alt="Resized Image">
+        <div class="resized-images">
+          {% for image in resized %}
+          <img src="data:image/jpeg;base64,{{ image }}" alt="Resized Image">
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% endif %}

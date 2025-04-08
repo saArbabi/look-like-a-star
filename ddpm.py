@@ -62,8 +62,6 @@ def generate(image_pipe, scheduler, device):
         img = x[i].cpu().permute(1, 2, 0).numpy()
         img = (img * 0.5 + 0.5) * 255
         img = Image.fromarray(img.astype(np.uint8))
-        img.save(f"generated_image_{i}.png")
-        print(f"Image {i} saved as generated_image_{i}.png")
         images.append(img)
     return images
 
@@ -72,19 +70,17 @@ def color_loss(images, target_image):
     # Calculates mean absolute difference between the image pixels and the target color
     # target shape: [1, 3, 256, 256]
     target = torch.tensor(target_image).to(images.device)
-    error = torch.abs(
-        images - target
-    ).mean()
+    error = torch.abs(images - target).mean()
     return error
 
 
 def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0):
     """
-    Generates images by iteratively refining random noise using a diffusion model 
+    Generates images by iteratively refining random noise using a diffusion model
     and a guidance mechanism based on a target image.
     """
     # start with random noise
-    x = torch.randn(4, 3, 256, 256).to(device)
+    x = torch.randn(5, 3, 256, 256).to(device)
 
     for i, t in tqdm(enumerate(scheduler.timesteps)):
 
@@ -121,8 +117,6 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
         img = x[i].cpu().permute(1, 2, 0).numpy()
         img = (img * 0.5 + 0.5) * 255
         img = Image.fromarray(img.astype(np.uint8))
-        img.save(f"generated_image_{i}.png")
-        print(f"Image {i} saved as generated_image_{i}.png")
         images.append(img)
     return images
 
@@ -141,3 +135,6 @@ if __name__ == "__main__":
     # images = generate(image_pipe, scheduler, device)
     target_image = image_load("pretty_woman.png")
     images = guide(image_pipe, scheduler, device, target_image)
+    # save images
+    for i, img in enumerate(images):
+        img.save(f"generated_image_{i}.png")
