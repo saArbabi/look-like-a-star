@@ -19,36 +19,34 @@
       justify-content: center;
       gap: 20px;
     }
-    .resized-images {
+    .column {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
       gap: 20px;
-      justify-content: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Upload an Image</h1>
+    <h1>Discover Your Celebrity Look-Alike!</h1>
     <form method="POST" enctype="multipart/form-data">
       <input type="file" name="image" required>
-      <input type="submit" value="Upload">
+      <input type="submit" value="Upload a selfie">
     </form>
 
     {% if original and resized %}
     <h2>Original and Resized Images:</h2>
     <div class="images">
-      <div>
-        <p>Original</p>
+      <div class="column">
+        <p>Reference Image</p>
         <img src="data:image/jpeg;base64,{{ original }}" alt="Original Image">
       </div>
-      <div>
-        <p>Resized</p>
-        <div class="resized-images">
-          {% for image in resized %}
-          <img src="data:image/jpeg;base64,{{ image }}" alt="Resized Image">
-          {% endfor %}
-        </div>
+      <div class="column">
+        <p>Generated Images</p>
+        {% for image in resized %}
+        <img src="data:image/jpeg;base64,{{ image }}" alt="Resized Image">
+        {% endfor %}
       </div>
     </div>
     {% endif %}

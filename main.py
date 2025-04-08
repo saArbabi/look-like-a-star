@@ -1,10 +1,9 @@
 import base64
 from io import BytesIO
 
+from ddpm import generate, load_ddpm_pipeline
 from flask import Flask, render_template, request
 from PIL import Image
-
-from ddpm import generate, load_ddpm_pipeline
 
 # image_pipe, scheduler, device = load_ddpm_pipeline()
 # generate(image_pipe, scheduler, device)
