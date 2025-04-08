@@ -6,3 +6,4 @@ torchvision==0.21.0
 Flask==3.1.0
 pillow==11.1.0
 gunicorn
+pyheif==0.8.0

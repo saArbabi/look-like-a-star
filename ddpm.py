@@ -81,6 +81,7 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
     """
     # start with random noise
     x = torch.randn(5, 3, 256, 256).to(device)
+    target_image = image_transform(target_image)
 
     for i, t in tqdm(enumerate(scheduler.timesteps)):
 
@@ -121,10 +122,9 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
     return images
 
 
-def image_load(file):
+def image_transform(pl_img):
     # Pillow loads images in RGB
-    img = Image.open(file)
-    img = img.resize((256, 256))
+    img = pl_img.resize((256, 256))
     img = (np.array(img) / 255.0 - 0.5) / 0.5
     img = torch.tensor(img).permute(2, 0, 1).unsqueeze(0)
     return img
@@ -133,7 +133,7 @@ def image_load(file):
 if __name__ == "__main__":
     image_pipe, scheduler, device = load_ddpm_pipeline()
     # images = generate(image_pipe, scheduler, device)
-    target_image = image_load("pretty_woman.png")
+    target_image = Image.open("pretty_woman.png")
     images = guide(image_pipe, scheduler, device, target_image)
     # save images
     for i, img in enumerate(images):
