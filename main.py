@@ -50,7 +50,7 @@ def open_image(file):
 
 
 @app.route("/", methods=["GET", "POST"])
-def upload_image():
+def image_gen():
     target_b64 = None
     generated_b64 = None
 
