@@ -25,7 +25,7 @@ def load_ddpm_pipeline():
         else "cuda" if torch.cuda.is_available() else "cpu"
     )
     logging.info(f"Using device: {device}")
-
+    # Pipeline will load the task class based on the model
     image_pipe = DDPMPipeline.from_pretrained("google/ddpm-celebahq-256")
     image_pipe.to(device)
 
