@@ -32,7 +32,6 @@ def load_ddpm_pipeline():
     # Create new scheduler and set num inference steps
     scheduler = DDIMScheduler.from_pretrained("google/ddpm-celebahq-256")
     scheduler.set_timesteps(num_inference_steps=40)
-    scheduler.set_timesteps(num_inference_steps=40)
     return image_pipe, scheduler, device
 
 
