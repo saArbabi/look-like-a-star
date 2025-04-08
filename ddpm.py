@@ -37,7 +37,6 @@ def load_ddpm_pipeline():
 
 
 def generate(image_pipe, scheduler, device):
-    # return
     # The random starting point
     x = torch.randn(4, 3, 256, 256).to(device)  # Batch of 4, 3-channel 256 x 256 px images
 
@@ -70,18 +69,21 @@ def generate(image_pipe, scheduler, device):
 
 
 def color_loss(images, target_image):
-    """Given a target color (R, G, B) return a loss for how far away on average
-    the images' pixels are from that color. Defaults to a light teal: (0.1, 0.9, 0.5)"""
-    target = torch.tensor(target_image).to(images.device)  # Map target color to (-1, 1)
-    target = target[None, :, :, :]  # Get shape right to work with the images (b, c, h, w)
+    # Calculates mean absolute difference between the image pixels and the target color
+    # target shape: [1, 3, 256, 256]
+    target = torch.tensor(target_image).to(images.device)
     error = torch.abs(
         images - target
-    ).mean()  # Mean absolute difference between the image pixels and the target color
+    ).mean()
     return error
 
 
 def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0):
-    # The guidance scale determines the strength of the effect
+    """
+    Generates images by iteratively refining random noise using a diffusion model 
+    and a guidance mechanism based on a target image.
+    """
+    # start with random noise
     x = torch.randn(4, 3, 256, 256).to(device)
 
     for i, t in tqdm(enumerate(scheduler.timesteps)):
@@ -107,7 +109,7 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
         # Get gradient
         cond_grad = -torch.autograd.grad(loss, x)[0]
 
-        # Modify x based on this gradient
+        # Modify x based on this gradient, detach to stop gradient tracking
         x = x.detach() + cond_grad
 
         # Now step with scheduler
@@ -126,16 +128,16 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
 
 
 def image_load(file):
+    # Pillow loads images in RGB
     img = Image.open(file)
     img = img.resize((256, 256))
-    img = np.array(img) / 255.0
+    img = (np.array(img) / 255.0 - 0.5) / 0.5
     img = torch.tensor(img).permute(2, 0, 1).unsqueeze(0)
     return img
 
 
 if __name__ == "__main__":
     image_pipe, scheduler, device = load_ddpm_pipeline()
-    images = generate(image_pipe, scheduler, device)
+    # images = generate(image_pipe, scheduler, device)
     target_image = image_load("pretty_woman.png")
     images = guide(image_pipe, scheduler, device, target_image)
-    # images = generate(image_pipe, scheduler, device)
