@@ -35,17 +35,16 @@
       <input type="submit" value="Upload a selfie">
     </form>
 
-    {% if original and resized %}
-    <h2>Original and Resized Images:</h2>
+    {% if target and generated %}
     <div class="images">
       <div class="column">
-        <p>Reference Image</p>
-        <img src="data:image/jpeg;base64,{{ original }}" alt="Original Image">
+        <p>Target Image</p>
+        <img src="data:image/jpeg;base64,{{ target }}" alt="Target Image">
       </div>
       <div class="column">
         <p>Generated Images</p>
-        {% for image in resized %}
-        <img src="data:image/jpeg;base64,{{ image }}" alt="Resized Image">
+        {% for image in generated %}
+        <img src="data:image/jpeg;base64,{{ image }}" alt="Generated Image">
         {% endfor %}
       </div>
     </div>
