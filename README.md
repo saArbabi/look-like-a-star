@@ -1,6 +1,6 @@
 This repository implements a Flask app for a [Denoising Diffusion Probabilistic Model (DDPM)](https://arxiv.org/pdf/2006.11239).  
 Given a user-uploaded selfie, the model generates celebrity faces that resemble the input image. The model is served through a backend and can be accessed from a web frontend hosted on GCP Cloud Run.  
-The model comes from Hugging Face's [`diffusers`](https://github.com/huggingface/diffusers) library and is pre-trained on 30,000 high-quality celebrity faces, resized to 256×256 pixels.
+The model comes from Hugging Face's [`diffusers`](https://github.com/huggingface/diffusers) library and is pre-trained on 30,000 celebrity faces, resized to 256×256 pixels.
 
 ## Background on DDPM with Guidance
 
@@ -79,20 +79,19 @@ gcloud run deploy guided-ddpm-service \
   --port=8080
 ```
 
-### Alternative Deployment via GCP Console
-
 You can also deploy the app directly from the Google Cloud Console. Navigate to **Cloud Run**, click **Create Service**, and follow the prompts to upload your container image and configure the service.
 
 ## Model Testing & Examples
 
 ### Unguided Generation
-
 Below are four example images generated without any guidance:
 
-<img src="generated_images/generated_image_0.png" alt="Generated Image Example 0" width="150">
-<img src="generated_images/generated_image_1.png" alt="Generated Image Example 1" width="150">
-<img src="generated_images/generated_image_2.png" alt="Generated Image Example 2" width="150">
-<img src="generated_images/generated_image_4.png" alt="Generated Image Example 3" width="150">
+<div style="display: flex; gap: 10px;">
+  <img src="generated_images/generated_image_0.png" alt="Generated Image Example 0" width="150">
+  <img src="generated_images/generated_image_1.png" alt="Generated Image Example 1" width="150">
+  <img src="generated_images/generated_image_2.png" alt="Generated Image Example 2" width="150">
+  <img src="generated_images/generated_image_4.png" alt="Generated Image Example 3" width="150">
+</div>
 
 These samples are quite realistic and diverse.
 
@@ -102,7 +101,7 @@ These samples are quite realistic and diverse.
 
 <img src="generated_images/id_gen.png" alt="Generated Images - In-Distribution" width="600">
 
-When using in-distribution target images, the model performs well. The generated outputs closely match the target in terms of facial pose and hairstyle, showing effective guidance within the learned data manifold.
+When using in-distribution target images, the model performs well. The generated outputs closely match the target in terms of facial pose and hairstyle, showing effective guidance within the learned data manifold. Notably, all generated images appear female, consistent with the target image's characteristics.
 
 ---
 
@@ -110,7 +109,7 @@ When using in-distribution target images, the model performs well. The generated
 
 <img src="generated_images/selfie_gen.png" alt="Generated Images - Selfie" width="600">
 
-Using my own selfie as the target gives results that are... let's say, humbling. This is expected: a target image significantly different from the training distribution pushes the model outside the data manifold, leading to poor generation.
+In my opinion, using my own selfie as the target gives results that are... let's say, humbling. I think this result makes sense: a target image significantly different from the training distribution pushes the model outside the data manifold, leading to poor generation.
 
 ---
 
@@ -122,4 +121,4 @@ Using my own selfie as the target gives results that are... let's say, humbling.
 **Cat Image**  
 <img src="generated_images/cat_gen.png" alt="Generated Images - Cat" width="600">
 
-These results are… unsettling. Since the model was trained exclusively on human faces, it can't adapt when guided toward non-human targets like animals.  
+These results are… unsettling. Since the model was trained exclusively on human faces, it can't adapt when guided toward non-human targets like cats and dogs.  
