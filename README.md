@@ -1,12 +1,11 @@
-# Guided DDPM
+This repository implements a Flask app for a [Denoising Diffusion Probabilistic Model (DDPM)](https://arxiv.org/pdf/2006.11239) on Google Cloud using a containerized Flask application. 
+Given a user-uploaded selfie, the model generates celebrity faces that resemble the input image. The model is served through a backend and can be accessed via a web frontend hosted on GCP Cloud Run.
+The model is based on Hugging Face's [`diffusers`](https://github.com/huggingface/diffusers) library, and is trained on 30,000 high-quality celebrity faces resized to 256×256 pixels.
 
-This repository demonstrates how to deploy a DDPM (Denoising Diffusion Probabilistic Model) on Google Cloud using a containerized Flask application. Given a user-uploaded selfie, the model generates celebrity faces that resemble the input image. The model is served through a backend and can be accessed via a web front-end hosted on GCP Cloud Run.
-
-## Overview
-
-- **Model**: Based on Hugging Face's `diffusers` library ([link to repo](https://github.com/huggingface/diffusers)).
-- **Training Data**: 30,000 high-quality celebrity faces, resized to 256x256 pixels.
-- **Output**: Celebrity face images generated to resemble the uploaded selfie using guided DDPM inference.
+## DDPM with Guidance
+Diffusion models (DMs) are a class of generative models that progressively transform random noise into data samples (such as images). The goal of diffusion models is to generate samples from a complex distribution by simulating a Markov chain of noisy steps—starting from Gaussian noise and gradually moving toward the target distribution (e.g., real images). The model is trained to predict the noise added at each step, which can be interpreted as learning the gradient of the data distribution.
+One limitation of the vanilla DDPM is its lack of control over the generated images. To address this, guidance can be introduced to steer the model toward a desired output.
+In this implementation, we incorporate a guidance method by introducing a loss function that measures the difference between the generated image and a target image. This image loss guides the diffusion process, nudging the model toward producing images that resemble the specified target.
 
 ## Local Development & Testing
 
