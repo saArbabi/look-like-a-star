@@ -65,7 +65,7 @@ def generate(image_pipe, scheduler, device):
     return images
 
 
-def color_loss(images, target_image):
+def image_loss(images, target_image):
     # Calculates mean absolute difference between the image pixels and the target color
     # target shape: [1, 3, 256, 256]
     target = torch.tensor(target_image).to(images.device)
@@ -98,7 +98,7 @@ def guide(image_pipe, scheduler, device, target_image, guidance_loss_scale=50.0)
         x0 = scheduler.step(noise_pred, t, x).pred_original_sample
 
         # Calculate loss
-        loss = color_loss(x0, target_image) * guidance_loss_scale
+        loss = image_loss(x0, target_image) * guidance_loss_scale
         if i % 10 == 0:
             print(i, "loss:", loss.item())
 
@@ -131,9 +131,9 @@ def image_transform(pl_img):
 
 if __name__ == "__main__":
     image_pipe, scheduler, device = load_ddpm_pipeline()
-    # images = generate(image_pipe, scheduler, device)
-    target_image = Image.open("pretty_woman.png")
-    images = guide(image_pipe, scheduler, device, target_image)
+    images = generate(image_pipe, scheduler, device)
+    # target_image = Image.open("pretty_woman.png")
+    # images = guide(image_pipe, scheduler, device, target_image)
     # save images
     for i, img in enumerate(images):
         img.save(f"generated_image_{i}.png")
