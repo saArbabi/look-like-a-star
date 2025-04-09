@@ -81,9 +81,9 @@ gcloud run deploy guided-ddpm-service \
 
 You can also deploy the app directly from the Google Cloud Console. Navigate to **Cloud Run**, click **Create Service**, and follow the prompts to upload your container image and configure the service.
 
-## Model Testing & Examples
+## Generated Images
 
-### Unguided Generation
+### Unguided generation
 Below are four example images generated without any guidance:
 
 <div style="display: flex; gap: 10px;">
@@ -97,7 +97,7 @@ These samples are quite realistic and diverse.
 
 ---
 
-### In-Distribution Data
+### In-distribution image
 
 <img src="generated_images/id_gen.png" alt="Generated Images - In-Distribution" width="600">
 
@@ -105,7 +105,7 @@ When using in-distribution target images, the model performs well. The generated
 
 ---
 
-### Out-of-Distribution: Human Selfie
+### Out-of-distribution: selfie target
 
 <img src="generated_images/selfie_gen.png" alt="Generated Images - Selfie" width="600">
 
@@ -113,12 +113,12 @@ In my opinion, using my own selfie as the target gives results that are... let's
 
 ---
 
-### Out-of-Distribution: Non-Human Inputs
+### Out-of-distribution: non-Human targets
 
-**Dog Image**  
+**Dog image**  
 <img src="generated_images/dog_gen.png" alt="Generated Images - Dog" width="600">
 
-**Cat Image**  
+**Cat image**  
 <img src="generated_images/cat_gen.png" alt="Generated Images - Cat" width="600">
 
 These results are… unsettling. Since the model was trained exclusively on human faces, it can't adapt when guided toward non-human targets like cats and dogs.  
