@@ -2,17 +2,17 @@ This repository implements a Flask app for a [Denoising Diffusion Probabilistic 
 Given a user-uploaded selfie, the model generates celebrity faces that resemble the input image. The model is served through a backend and can be accessed from a web frontend hosted on GCP Cloud Run.  
 The model comes from Hugging Face's [`diffusers`](https://github.com/huggingface/diffusers) library and is pre-trained on 30,000 celebrity faces, resized to 256×256 pixels.
 
-## Background on DDPM with Guidance
+## Background on DDPM with guidance
 
 Diffusion models are a class of generative models that progressively transform random noise into data samples (such as images). The goal of diffusion models is to generate samples from a complex distribution by simulating a Markov chain of noisy steps—starting from Gaussian noise and gradually moving toward the target distribution (e.g., real images). The model is trained to predict the noise added at each step, which can be interpreted as learning the gradient of the data distribution.  
 One limitation of the vanilla DDPM is its lack of control over the generated images. To address this, guidance can be added to steer the model toward a desired output.  
 This implementation adds a guidance method by introducing a loss function that measures the difference between the generated image and a target image. This image loss guides the diffusion process, nudging the model toward producing images that resemble the specified target.
 
-## Local Development & Testing
+## Local development & testing
 
 You can run the app locally using Docker or a Python virtual environment.
 
-### Using Docker
+### Using docker
 
 #### Build the image:
 ```bash
@@ -25,7 +25,7 @@ docker build -t flask-app .
 docker run --gpus all -p 5000:8080 -v $(pwd):/app -e PORT=8080 flask-app
 ```
 
-### Using Python Virtual Environment
+### Using Python virtual environment
 
 #### Set up the environment:
 ```bash
@@ -40,7 +40,7 @@ python main.py
 ```
 
 
-## GCP Deployment
+## GCP deployment
 
 You can deploy the app to Google Cloud Run for scalable hosting. Note that GPU support is not currently enabled in Cloud Run, so generating five images takes roughly 14 minutes!
 
@@ -49,14 +49,14 @@ You can deploy the app to Google Cloud Run for scalable hosting. Note that GPU s
 - A Google Cloud account
 - The gcloud CLI installed and authenticated
 
-### Deployment Steps
+### Deployment steps
 
 #### Set your GCP region:
 ```bash
 gcloud config set run/region europe-west1
 ```
 
-#### Create a Docker Artifact Repository:
+#### Create a docker artifact repository:
 ```bash
 gcloud artifacts repositories create docker-repo \
   --repository-format=docker \
@@ -81,7 +81,7 @@ gcloud run deploy guided-ddpm-service \
 
 You can also deploy the app directly from the Google Cloud Console. Navigate to **Cloud Run**, click **Create Service**, and follow the prompts to upload your container image and configure the service.
 
-## Generated Images
+## Generated images
 
 ### Unguided generation
 Below are four example images generated without any guidance:
