@@ -109,7 +109,7 @@ When using in-distribution target images, the model performs well. The generated
 
 <img src="generated_images/selfie_gen.png" alt="Generated Images - Selfie" width="600">
 
-In my opinion, using my own selfie as the target gives results that are... let's say, humbling. I think this result makes sense: a target image significantly different from the training distribution pushes the model outside the data manifold, leading to poor generation.
+Using my own selfie as the target gives results that are... let's say, humbling. I think this result makes sense: a target image significantly different from the training distribution pushes the model outside the data manifold, leading to poor generation.
 
 ---
 
