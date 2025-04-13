@@ -101,7 +101,7 @@ These samples are quite realistic and diverse.
 
 <img src="generated_images/id_gen.png" alt="Generated Images - In-Distribution" width="600">
 
-When using in-distribution target images, the model performs well. The generated outputs closely match the target in terms of facial pose and hairstyle, showing effective guidance within the learned data manifold. Notably, all generated images appear female, consistent with the target image's characteristics.
+When using in-distribution target images, the model performs quite well! The generated outputs closely match the target in terms of facial pose and hairstyle, showing effective guidance within the learned data manifold. Note how all generated images appear female, consistent with the target image's characteristics.
 
 ---
 
