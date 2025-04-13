@@ -121,4 +121,6 @@ Using my own selfie as the target gives results that are... let's say, humbling.
 **Cat image**  
 <img src="generated_images/cat_gen.png" alt="Generated Images - Cat" width="600">
 
-These results are… unsettling. Since the model was trained exclusively on human faces, it can't adapt when guided toward non-human targets like cats and dogs.  
+These results are… unsettling. Since the model was trained exclusively on human faces, it can't adapt well when guided toward non-human targets like cats and dogs. That said, I do have a feeling that the shocked cat face has influenced the synthesized human expressions, but that could just be my interpretation.
+
+
