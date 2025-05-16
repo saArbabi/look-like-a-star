@@ -2,7 +2,7 @@ This repository implements a Flask app for a [Denoising Diffusion Probabilistic 
 Given a user-uploaded selfie, the model generates celebrity faces that resemble the input image. The model is served through a backend and can be accessed from a web frontend hosted on GCP Cloud Run.  
 The model comes from Hugging Face's [`diffusers`](https://github.com/huggingface/diffusers) library and is pre-trained on 30,000 celebrity faces, resized to 256×256 pixels.
 
-## Background on DDPM with guidance
+## DDPM with guidance
 
 Diffusion models are a class of generative models that progressively transform random noise into data samples (such as images). The goal of diffusion models is to generate samples from a complex distribution by simulating a Markov chain of noisy steps—starting from Gaussian noise and gradually moving toward the target distribution (e.g., real images). The model is trained to predict the noise added at each step, which can be interpreted as learning the gradient of the data distribution.  
 One limitation of the vanilla DDPM is its lack of control over the generated images. To address this, guidance can be added to steer the model toward a desired output.  
